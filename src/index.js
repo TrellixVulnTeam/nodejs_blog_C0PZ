@@ -13,10 +13,21 @@ const app = express();
 
 const port = 3000;
 
+const route = require("./routes");
+const routes = require("./routes");
+
 //kiem tra phuong thuc static co join thu muc
 app.use(express.static(path.join(__dirname, "public")));
-//
-app.use(morgan("combined"));
+//Midle ware
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(express.json());
+
+// app.use(morgan("combined"));
 
 //template engine
 const hbs = handlebars.create({ extname: ".hbs" });
@@ -26,17 +37,7 @@ app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "resources/views"));
 
-console.log(__dirname);
-
-//dinh nghia route: khi di vao "/ se tra ve cai return"
-// dau "/" de khi trinh duyet vao
-app.get("/", (req, res) => {
-  res.render("home");
-});
-
-app.get("/news", (req, res) => {
-  res.render("news");
-});
+route(app);
 
 //lang nghe cong 3000
 // 127.0.0.1 anh xa hostname localhost
